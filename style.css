@@ -1,3 +1,43 @@
+.main .col-12 img[src="img/miku.gif"] {
+    max-width: 100%; /* Ensure image is responsive */
+    height: auto;    /* Maintain aspect ratio */
+    display: block;  /* To allow margin: auto for centering if parent is flex, though text-center on parent handles this */
+    margin-left: auto; /* For centering if not using text-center on parent */
+    margin-right: auto; /* For centering if not using text-center on parent */
+}
+
+/* Kích thước hình ảnh có thể cần điều chỉnh cho từng breakpoint */
+/* Default size for smaller screens */
+.main .col-12 img[src="img/miku.gif"] {
+    width: 80%; /* Adjust as needed for mobile */
+}
+
+@media (min-width: 576px) {
+    .main .col-12 img[src="img/miku.gif"] {
+        width: 60%; /* Adjust for small tablets */
+    }
+}
+
+@media (min-width: 768px) {
+    .main .col-12 img[src="img/miku.gif"] {
+        width: 40%; /* Adjust for tablets and small laptops */
+    }
+}
+
+@media (min-width: 992px) {
+    .main .col-12 img[src="img/miku.gif"] {
+        width: 30%; /* Adjust for desktops */
+    }
+}
+
+@media (min-width: 1200px) {
+    .main .col-12 img[src="img/miku.gif"] {
+        width: 25%; /* Adjust for larger desktops */
+    }
+}
+
+
+/* Keep existing styles */
 /* customizable snowflake styling */
 .loader button {
     width: 50%;
@@ -118,12 +158,4 @@ img {
     font-size: 25px;
     color: #C4515C;
 
-}
-
-.cake {
-    transform: translateY(-50%);
-    transform: translateX(-50%);
-    left: 50%;
-    position: absolute;
-    padding-top: 250px;
 }

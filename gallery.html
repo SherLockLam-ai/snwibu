@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bộ Sưu Tập Ảnh</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #FFDAB9; /* Màu nền giống index.html */
+            padding-top: 20px;
+        }
+        .gallery-container {
+            max-width: 960px;
+            margin: 0 auto;
+            background-color: #fff; /* Vẫn giữ nền trắng cho phần khung ảnh chính */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .gallery-item {
+            margin-bottom: 20px;
+            text-align: center; /* Để căn giữa ảnh trong item */
+        }
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            max-width: 600px; /* Giới hạn kích thước ảnh nếu cần, đã tăng lên một chút */
+            display: block; /* Đảm bảo căn giữa hoạt động tốt */
+            margin: 0 auto; /* Căn giữa ảnh trong khung */
+        }
+        h1 {
+            color: #C4515C;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .back-button-container {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        .btn-custom-back {
+            background-color: #a54e07; /* Màu nút giống loader button */
+            color: #fff;
+            border: 1px solid #a55d07;
+            padding: 10px 20px;
+            border-radius: .3em;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: all .2s ease-in-out;
+        }
+        .btn-custom-back:hover {
+            background-color: #b17d10;
+            border-color: rgba(165, 93, 7, .6);
+            color: #fff;
+            text-decoration: none;
+        }
+        /* Styles for fading effect */
+        .gallery-image {
+            opacity: 0;
+            transition: opacity 1000ms ease-in-out; /* Match fadeDuration in JS */
+            position: absolute; /* Quan trọng để các ảnh chồng lên nhau */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex; /* Dùng flexbox để căn giữa ảnh */
+            justify-content: center;
+            align-items: center;
+            overflow: hidden; /* Đảm bảo ảnh không tràn ra ngoài nếu kích thước lớn */
+        }
+        .image-wrapper {
+            position: relative; /* Tạo context cho absolute-positioned images */
+            min-height: 450px; /* Chiều cao tối thiểu cho wrapper để chứa ảnh, tăng lên để chứa ảnh lớn hơn */
+            max-width: 100%;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff; /* Nền trắng cho khung ảnh */
+        }
+        #finalMessage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2000ms ease-in-out; /* Thời gian transition lâu hơn cho hiệu ứng hiện từ từ */
+            background-color: transparent; /* Nền trong suốt để trùng với background body */
+            /* border-radius: 8px; */ /* Không cần border-radius nếu background trong suốt */
+        }
+        #finalMessage h2 {
+            font-size: 2.5rem; /* Tăng kích thước chữ cho câu nói cuối */
+            padding: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* Thêm đổ bóng để chữ nổi bật hơn */
+        }
+
+        /* Responsive adjustments for image-wrapper height */
+        @media (max-width: 767.98px) {
+            .image-wrapper {
+                min-height: 300px; /* Smaller height for mobile */
+            }
+            #finalMessage h2 {
+                font-size: 1.8rem;
+            }
+        }
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            .image-wrapper {
+                min-height: 400px; /* Medium height for tablets */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="back-button-container">
+            <a href="index.html" class="btn btn-custom-back">Quay lại trang chính</a>
+        </div>
+        <h1>Memory</h1>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6 image-wrapper">
+                <div class="gallery-item gallery-image">
+                    <img src="./img/anh1.jpg" alt="Ảnh 1">
+                </div>
+                <div class="gallery-item gallery-image">
+                    <img src="./img/anh2.jpg" alt="Ảnh 2">
+                </div>
+                <div class="gallery-item gallery-image">
+                    <img src="./img/anh3.jpg" alt="Ảnh 3">
+                </div>
+                <div class="gallery-item gallery-image">
+                    <img src="./img/anh4.jpg" alt="Ảnh 4">
+                </div>
+                <div id="finalMessage" style="display: none;">
+                    <h2 style="color: #C4515C;">Zậy nha chúc Văn Tùng snvv bớt ảo tưởng làm main lại đi...!</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const images = document.querySelectorAll('.gallery-image');
+        const finalMessage = document.getElementById('finalMessage');
+        let currentIndex = 0;
+        const fadeDuration = 1000; // Thời gian trôi/mờ ảnh (milliseconds)
+        const displayInterval = 2000; // Thời gian hiển thị mỗi ảnh (milliseconds)
+        const finalMessageDelay = 2000; // Delay trước khi hiện câu nói cuối cùng sau ảnh cuối (milliseconds)
+
+        // Ẩn tất cả ảnh ban đầu
+        images.forEach(img => {
+            img.style.opacity = 0;
+        });
+
+        function showImage(index) {
+            if (index < images.length) {
+                images[index].style.opacity = 1; // Hiện ảnh
+                setTimeout(() => {
+                    images[index].style.opacity = 0; // Bắt đầu mờ ảnh sau displayInterval
+                    setTimeout(() => {
+                        showNextImage(); // Sau khi ảnh mờ đi, hiện ảnh kế tiếp
+                    }, fadeDuration);
+                }, displayInterval);
+            } else {
+                // Khi đã hiển thị hết ảnh, hiển thị câu nói cuối cùng
+                setTimeout(() => {
+                    finalMessage.style.display = 'flex'; // Sử dụng flex để căn giữa nội dung
+                    setTimeout(() => {
+                        finalMessage.style.opacity = 1; // Bắt đầu hiệu ứng hiện từ từ
+                    }, 50); // Một chút delay để đảm bảo display đã được cập nhật trước khi áp dụng opacity
+                }, finalMessageDelay);
+            }
+        }
+
+        function showNextImage() {
+            currentIndex++;
+            showImage(currentIndex);
+        }
+
+        // Bắt đầu quá trình hiển thị ảnh đầu tiên sau một khoảng thời gian ngắn
+        setTimeout(() => {
+            showImage(currentIndex);
+        }, 500); // Delay ban đầu trước khi hiển thị ảnh đầu tiên
+    });
+</script>
+</body>
+</html>
